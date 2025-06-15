@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: dev_sysacad
+    environment:
+      POSTGRES_DB: DEV_SYSACAD
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5434"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
