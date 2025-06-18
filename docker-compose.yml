@@ -6,8 +6,8 @@ services:
     container_name: dev_sysacad
     environment:
       POSTGRES_DB: DEV_SYSACAD
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: user_sysacad
+      POSTGRES_PASSWORD: pass_sysacad
     ports:
       - "5432:5434"
     volumes:
