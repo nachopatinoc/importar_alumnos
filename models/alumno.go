@@ -3,6 +3,7 @@ package models
 import "time"
 
 type Alumno struct {
+	Id              int
 	Apellido        string
 	Nombre          string
 	NroDocumento    string
