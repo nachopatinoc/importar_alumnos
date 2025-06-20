@@ -4,39 +4,42 @@ import (
 	"database/sql"
 	"fmt"
 	"importar_alumnos/models"
+	"strings"
 )
 
 func InsertarBatchAlumnos(db *sql.DB, alumnos []models.Alumno) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return fmt.Errorf("error iniciando transacción: %v", err)
+	if len(alumnos) == 0 {
+		return nil
 	}
 
-	stmt, err := tx.Prepare(`
-		INSERT INTO alumnos 
-		(nro_legajo, apellido, nombre, nro_documento, tipo_documento, fecha_nacimiento, sexo, fecha_ingreso)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-	`)
-	if err != nil {
-		tx.Rollback()
-		return fmt.Errorf("error insertando batch: %v", err)
-	}
-	defer stmt.Close()
+	var queryBuilder strings.Builder
+	queryBuilder.WriteString("INSERT INTO alumnos (")
+	queryBuilder.WriteString("nro_legajo, apellido, nombre, nro_documento, tipo_documento, fecha_nacimiento, sexo, fecha_ingreso")
+	queryBuilder.WriteString(") VALUES ")
 
-	for _, a := range alumnos {
-		_, err := stmt.Exec(
-			a.NroLegajo, a.Apellido, a.Nombre,
-			a.NroDocumento, a.TipoDocumento,
-			a.FechaNacimiento, a.Sexo, a.FechaIngreso,
+	args := []interface{}{}
+	for i, a := range alumnos {
+		start := i*8 + 1
+		queryBuilder.WriteString(fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d),",
+			start, start+1, start+2, start+3, start+4, start+5, start+6, start+7))
+
+		args = append(args,
+			a.NroLegajo,
+			a.Apellido,
+			a.Nombre,
+			a.NroDocumento,
+			a.TipoDocumento,
+			a.FechaNacimiento,
+			a.Sexo,
+			a.FechaIngreso,
 		)
-		if err != nil {
-			tx.Rollback()
-			return fmt.Errorf("error insertando batch: %v", err)
-		}
 	}
 
-	if err := tx.Commit(); err != nil {
-		return fmt.Errorf("error al confirmar transacción: %v", err)
+	query := strings.TrimSuffix(queryBuilder.String(), ",")
+
+	_, err := db.Exec(query, args...)
+	if err != nil {
+		return fmt.Errorf("error insertando batch: %v", err)
 	}
 
 	return nil
