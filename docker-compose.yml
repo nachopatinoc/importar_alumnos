@@ -9,6 +9,6 @@ services:
       POSTGRES_USER: user_sysacad
       POSTGRES_PASSWORD: pass_sysacad
     ports:
-      - "5432:5434"
+      - "5434:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
