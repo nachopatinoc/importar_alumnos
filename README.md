@@ -23,6 +23,39 @@ Leer millones de registros desde un CSV y cargarlos en la tabla `alumnos` de la 
 - Docker + Docker Compose
 - Git (opcional, si se clona desde un repo)
 
+#### Si estas en Linux ejecutá lo siguiente para las instalaciones:
+
+##### Actualizar e instalar dependencias básicas
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl wget git ca-certificates gnupg lsb-release software-properties-common
+
+##### 👉 Instalar Go 1.21+
+wget https://go.dev/dl/go1.21.10.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go
+sudo tar -C /usr/local -xzf go1.21.10.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+source ~/.bashrc
+
+##### Verificar Go
+go version
+
+##### 👉 Instalar Docker
+curl -fsSL https://get.docker.com | sudo sh
+
+##### Verificar Docker
+sudo docker version
+
+##### 👉 Instalar Docker Compose (plugin moderno para Docker)
+sudo apt install -y docker-compose-plugin
+
+##### Verificar Docker Compose
+docker compose version
+
+##### 👉 Instalar Git (opcional si ya lo tenés)
+sudo apt install -y git
+git --version
+
+
 ---
 
 ### 2. Crear el archivo `.env`
@@ -50,6 +83,8 @@ docker-compose up -d
 Ubicar el archivo original (el que contiene los 2.5 millones de registros) en la siguiente carpeta del proyecto:
 
 /data/alumnos.csv
+
+(Esta incluido el archivo alumnos.csv de prueba, hay que eliminarlo y cargar el original)
 
 ---
 
