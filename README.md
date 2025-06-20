@@ -65,7 +65,7 @@ En la raíz del proyecto, crear un archivo llamado `.env` con el siguiente conte
 DB_HOST=localhost
 DB_PORT=5434
 DB_USER=user_sysacad
-DB_PASS=postgres
+DB_PASS=pass_sysacad
 DB_NAME=DEV_SYSACAD
 
 ---
@@ -106,7 +106,12 @@ docker exec -it dev_sysacad psql -U user_sysacad -d DEV_SYSACAD
 
 En el caso de querer eliminar los alumnos ingresados en la tabla ejecutar dentro del prompt de PostgreSQL:
 
-DELETE FROM ALUMNOS
+DELETE FROM ALUMNOS;
+
+Para salir del contenedor de PostgresSQL escribir:
+
+\q 
+
 
 ---
 
