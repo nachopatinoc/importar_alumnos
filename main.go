@@ -17,7 +17,7 @@ const (
 )
 
 func main() {
-	inicio := time.Now()
+	tiempoInicio := time.Now()
 
 	db, err := config.ConectarDB(".env")
 	if err != nil {
@@ -33,6 +33,8 @@ func main() {
 	if len(alumnos) == 0 {
 		log.Fatal("El archivo CSV está vacío o no se pudo parsear correctamente.")
 	}
+
+	fmt.Printf("Se leyeron %d alumnos\n", len(alumnos))
 
 	var wg sync.WaitGroup
 	maxConcurrent := 18
@@ -58,8 +60,13 @@ func main() {
 			}
 		}(i, fin, batch)
 	}
-
 	wg.Wait()
-	duracion := time.Since(inicio)
-	fmt.Printf("Tiempo total de ejecución: %s\n", duracion)
+	tiempoFin := time.Since(tiempoInicio)
+	fmt.Printf("Tiempo total de ejecución: %s\n", tiempoFin)
+
+	alumnosTotales, err := repository.ContarAlumnos(db)
+	if err != nil {
+		log.Fatalf("Error al contar alumnos: %v", err)
+	}
+	fmt.Printf("Total de alumnos insertados: %d\n", alumnosTotales)
 }
