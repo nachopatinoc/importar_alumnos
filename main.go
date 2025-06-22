@@ -13,7 +13,7 @@ import (
 
 const (
 	csvPath   = "data/alumnos.csv"
-	batchSize = 7500
+	batchSize = 5000
 )
 
 func main() {
@@ -34,11 +34,8 @@ func main() {
 		log.Fatal("El archivo CSV está vacío o no se pudo parsear correctamente.")
 	}
 
-	// maxConcurrent controla cuántos inserts se hacen en paralelo.
-	// Valor recomendado: entre 4 y 12 para la mayoría de las PCs.
-	// Se puede subir a 18 o más en máquinas potentes.
 	var wg sync.WaitGroup
-	maxConcurrent := 10
+	maxConcurrent := 18
 	semaforo := make(chan struct{}, maxConcurrent)
 
 	for i := 0; i < len(alumnos); i += batchSize {
