@@ -13,11 +13,11 @@ import (
 
 const (
 	csvPath   = "data/alumnos.csv"
-	batchSize = 7500
+	batchSize = 5000
 )
 
 func main() {
-	inicio := time.Now()
+	tiempoInicio := time.Now()
 
 	db, err := config.ConectarDB(".env")
 	if err != nil {
@@ -34,11 +34,10 @@ func main() {
 		log.Fatal("El archivo CSV está vacío o no se pudo parsear correctamente.")
 	}
 
-	// maxConcurrent controla cuántos inserts se hacen en paralelo.
-	// Valor recomendado: entre 4 y 12 para la mayoría de las PCs.
-	// Se puede subir a 18 o más en máquinas potentes.
+	fmt.Printf("Se leyeron %d alumnos\n", len(alumnos))
+
 	var wg sync.WaitGroup
-	maxConcurrent := 10
+	maxConcurrent := 18
 	semaforo := make(chan struct{}, maxConcurrent)
 
 	for i := 0; i < len(alumnos); i += batchSize {
@@ -61,8 +60,13 @@ func main() {
 			}
 		}(i, fin, batch)
 	}
-
 	wg.Wait()
-	duracion := time.Since(inicio)
-	fmt.Printf("Tiempo total de ejecución: %s\n", duracion)
+	tiempoFin := time.Since(tiempoInicio)
+	fmt.Printf("Tiempo total de ejecución: %s\n", tiempoFin)
+
+	alumnosTotales, err := repository.ContarAlumnos(db)
+	if err != nil {
+		log.Fatalf("Error al contar alumnos: %v", err)
+	}
+	fmt.Printf("Total de alumnos insertados: %d\n", alumnosTotales)
 }
