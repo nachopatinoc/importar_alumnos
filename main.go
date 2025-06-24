@@ -17,7 +17,6 @@ const (
 )
 
 func main() {
-	tiempoInicio := time.Now()
 
 	db, err := config.ConectarDB(".env")
 	if err != nil {
@@ -35,6 +34,8 @@ func main() {
 	}
 
 	fmt.Printf("Se leyeron %d alumnos\n", len(alumnos))
+
+	tiempoInicio := time.Now()
 
 	var wg sync.WaitGroup
 	maxConcurrent := 18
